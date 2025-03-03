@@ -1,5 +1,5 @@
 ﻿@page "/evidence"
-
+@inject IJSRuntime JavaScript
 <PageTitle>Evidence</PageTitle>
 
 <h1>Evidence!</h1>
@@ -9,8 +9,58 @@
 	<label>Náklady: <input type="number" @bind-value="Polozka.Naklady" /></label>
 	<label>Výnosy: <InputNumber @bind-Value="Polozka.Vynosy" /> </label>
 	<label>Popis: <input type="text" @bind-value="Polozka.Popis" /></label>
-	<button type="button" class="btn btn-success">Přidat</button>
+	@if (IsEditace)
+	{
+		<button @onclick="UkonciEditaci" type="button" class="btn btn-primary">Ukončit</button>
+
+	}
+	else
+	{
+		<button @onclick="Pridat" type="button" class="btn btn-success">Přidat</button>
+	}
 </div>
+
+<div class="my-2">
+	@if (Polozky.Count == 0)
+	{
+		<p>Nejsou zatím žádné záznamy</p>
+	}
+	else
+	{
+		<table class="table">
+			<thead>
+				<tr>
+					<th>Datum</th>
+					<th>Náklady</th>
+					<th>Výnosy</th>
+					<th>Zisk</th>
+					<th>Popis</th>
+					<th>Smazat</th>
+					<th>Edituj</th>
+				</tr>
+			</thead>
+			<tbody>
+				@foreach (var pol in Polozky)
+				{
+					<tr>
+						<td>@pol.Datum</td>
+						<td>@pol.Naklady</td>
+						<td>@pol.Vynosy</td>
+						<td>@pol.Zisk</td>
+						<td>@pol.Popis</td>
+						<td>
+							<button @onclick="()=>SmazatZaznam(pol)" type="button" class="btn btn-outline-danger">&times;</button>
+						</td>
+						<td>
+							<button @onclick="()=>Edituj(pol)" type ="button" class="btn btn-outline-info">&plusmn;</button>
+						</td>
+					</tr>
+				}
+			</tbody>
+		</table>
+	}
+</div>
+
 @code {
 
 }

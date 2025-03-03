@@ -6,6 +6,15 @@
 		{
 			Datum = DateOnly.FromDateTime(DateTime.Now);
 		}
+
+		public Polozka(DateOnly datum, double vynosy, double naklady, string popis)
+		{
+			Datum = datum;
+			Vynosy = vynosy;
+			Naklady = naklady;
+			Popis = popis;
+		}
+
 		private double vynosy;
 		private double naklady;
 
