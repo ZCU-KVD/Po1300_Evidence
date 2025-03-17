@@ -1,10 +1,18 @@
 ﻿using Microsoft.JSInterop;
+using System.Globalization;
 using System.Reflection;
 
 namespace Po1300_Evidence.Pages
 {
 	public partial class EvidenceZisku
 	{
+		#region Udalosti formulare
+		protected override void OnInitialized()
+		{
+			CultureInfo.DefaultThreadCurrentCulture = new CultureInfo("cs-CZ");
+		}
+		#endregion
+
 		#region Vlastnosti
 		/// <summary>
 		/// Seznam položek, kde uzivatel muze pridavat, upravovat a mazat jednotlive polozky
@@ -53,6 +61,29 @@ namespace Po1300_Evidence.Pages
 		/// Textový filtr pro porovnávání s obsahem popisu položek.
 		/// </summary>
 		public string FiltrPopis { get; set; } = "";
+		
+		/// <summary>
+		/// Seznam položek, které splňují zadané filtry.
+		/// </summary>
+		private List<Models.Polozka> PolozkyFiltr { get; set; } = new List<Models.Polozka>();
+
+		private List<Models.Polozka> PolozkySeskupene => Polozky.OrderBy(x => x.Datum)
+			.GroupBy(g=> new { g.Datum.Year, g.Datum.Month})
+						.Select(x=>new Models.Polozka(
+							new DateOnly(x.Key.Year, x.Key.Month,1), 
+							x.Sum(y => y.Vynosy), x.Sum(y=>y.Naklady), 
+							string.Join(", ",x.Select(y=>y.Popis)))).ToList();
+
+		private List<Models.Polozka> PolozkySeskupeneV2 => (from p in Polozky
+															group p by new { p.Datum.Year, p.Datum.Month } into g
+															orderby g.Key.Year, g.Key.Month
+															select new Models.Polozka(
+																new DateOnly(g.Key.Year, g.Key.Month, 1),
+																g.Sum(x => x.Vynosy),
+																g.Sum(x => x.Naklady),
+																string.Join(", ", g.Select(x => x.Popis))
+																)
+															).ToList();
 		#endregion
 
 		#region Metody
@@ -180,7 +211,26 @@ namespace Po1300_Evidence.Pages
 		/// </summary>
 		public void FiltrujPolozky()
 		{
+			switch (SelectedFilter)
+			{
+				case "<":
+					PolozkyFiltr = Polozky.Where(x => x.Zisk < FiltrHodnota).ToList();
+					break;
+				case ">":
+					PolozkyFiltr = Polozky.Where(x => x.Zisk > FiltrHodnota).ToList();
+					break;
+				case "=":
+					PolozkyFiltr = Polozky.Where(x => x.Zisk == FiltrHodnota).ToList();
+					break;
 
+				default:
+					break;
+			}
+
+			if (!string.IsNullOrEmpty(FiltrPopis))
+			{
+				PolozkyFiltr = PolozkyFiltr.Where(x => x.Popis.Contains(FiltrPopis)).ToList();
+			}
 		}
 		#endregion
 
