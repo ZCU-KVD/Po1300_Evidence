@@ -4,6 +4,47 @@
 
 <h3>Evidence nákladů a výnosů</h3>
 
+<div class="container mt-3">
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Datum</th>
+                <th>Popis</th>
+                <th>Výnosy</th>
+                <th>Náklady</th>
+                <th>Zisk</th>
+                <th>Akce</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in EvidenceService.Transakce)
+            {
+                var tridaZisku = item.Zisk > 0 ? "text-success" : "text-danger";
+                <tr>
+                    <td>@item.Datum.ToShortDateString()</td>
+                    <td>@item.Popis</td>
+                    <td class="text-end text-success">@item.Vynosy.ToString("N2")</td>
+                    <td class="text-end text-danger">@item.Naklady.ToString("N2")</td>
+                    <td class="text-end fw-bold @tridaZisku">@item.Zisk.ToString("N2")</td>
+                    <td>
+                        <button type="button" class="btn btn-outline-primary">
+                            <span class="material-symbols-outlined">
+                                edit
+                            </span> Upravit
+                        </button>
+
+                        <button type="button" class="btn btn-outline-danger">
+                            <span class="material-symbols-outlined">
+                                delete
+                            </span> Smazat
+                        </button>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+
 @code {
 
 }
