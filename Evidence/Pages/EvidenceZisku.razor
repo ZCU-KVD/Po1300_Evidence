@@ -4,6 +4,48 @@
 
 <h3>Evidence nákladů a výnosů</h3>
 
+<div>
+    <div class="card">
+        <div class="card-body">
+            <EditForm Model="formularTransakce" OnValidSubmit="UlozitTransakci">
+                <DataAnnotationsValidator />
+                <div class="row g-3 align-items-end">
+                    <div class="col mb-3 mt-3">
+                        <label for="datum" class="form-label">Datum:</label>
+                        <InputDate class="form-control" @bind-Value="formularTransakce.Datum" id="datum" placeholder="Vložte datum" />
+                        <ValidationMessage For="@(() => formularTransakce.Datum)" />
+                    </div>
+
+                    <div class="col mb-3 mt-3">
+                        <label for="vynosy" class="form-label">Výnosy:</label>
+                        <InputNumber class="form-control" @bind-Value="formularTransakce.Vynosy" id="vynosy" placeholder="Vložte výnosy" />
+                        <ValidationMessage For="@(() => formularTransakce.Vynosy)" />
+                    </div>
+
+                    <div class="col mb-3 mt-3">
+                        <label for="naklady" class="form-label">Náklady:</label>
+                        <InputNumber class="form-control" @bind-Value="formularTransakce.Naklady" id="naklady" placeholder="Vložte náklady" />
+                        <ValidationMessage For="@(() => formularTransakce.Naklady)" />
+                    </div>
+
+                    <div class="col mb-3 mt-3">
+                        <label for="popis" class="form-label">Popis:</label>
+                        <InputText class="form-control" @bind-Value="formularTransakce.Popis" id="popis" placeholder="Vložte náklady" />
+                        <ValidationMessage For="@(() => formularTransakce.Popis)" />
+                    </div>
+
+                    <div class="col mb-3 mt-3">
+                        <button type="submit" class="btn btn-primary">
+                            @(!JeEditace ? "Přidat záznam" : "Uložit změny")
+                        </button>
+                    </div>
+                </div>
+                
+            </EditForm>
+        </div>
+    </div>
+</div>
+
 <div class="container mt-3">
     <table class="table table-striped">
         <thead>
@@ -27,7 +69,7 @@
                     <td class="text-end text-danger">@item.Naklady.ToString("N2")</td>
                     <td class="text-end fw-bold @tridaZisku">@item.Zisk.ToString("N2")</td>
                     <td>
-                        <button type="button" class="btn btn-outline-primary">
+                        <button type="button" @onclick="() => ZacitEditaci(item)" class="btn btn-outline-primary">
                             <span class="material-symbols-outlined">
                                 edit
                             </span> Upravit
