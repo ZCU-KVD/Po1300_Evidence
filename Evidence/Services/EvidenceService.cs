@@ -4,11 +4,31 @@ namespace Evidence.Services
 {
 	public class EvidenceService
 	{
-		public List<Transakce> Transakce { get; set; } = new List<Transakce>();
+		public List<Transakce> TransakceSeznam { get; set; } = new List<Transakce>();
 
 		public void PridatTransakci(Transakce itemTransakce)
 		{
-			Transakce.Add(itemTransakce);
+			TransakceSeznam.Add(itemTransakce);
+		}
+
+		public void Aktualizovat(Transakce puvodni, Transakce noveHodnoty)
+		{
+			//var pom = TransakceSeznam.FirstOrDefault(t => t.Id == puvodni.Id);
+			//if (pom != null)
+			//{
+			//	pom.AktualizovatZ(noveHodnoty);
+			//	return;
+			//}
+			//puvodni.Vynosy = noveHodnoty.Vynosy;
+			//puvodni.Naklady = noveHodnoty.Naklady;
+			//puvodni.Popis = noveHodnoty.Popis;
+			//puvodni.Datum = noveHodnoty.Datum;
+			puvodni.AktualizovatZ(noveHodnoty);
+		}
+
+		public void OdebratTransakci(Transakce mazanaTransakce)
+		{
+			TransakceSeznam.Remove(mazanaTransakce);
 		}
 
 		public void VygenerovatNahodnaData(int pocet)
@@ -25,7 +45,7 @@ namespace Evidence.Services
 					Vynosy = random.Next(1000, 50000),
 					Naklady = random.Next(500, 40000)
 				};
-				Transakce.Add(transakce);
+				TransakceSeznam.Add(transakce);
 			}
 		}
 	}

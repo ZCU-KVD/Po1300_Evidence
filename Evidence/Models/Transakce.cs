@@ -70,6 +70,14 @@ namespace Evidence.Models
 				Id = this.Id
 			};
 		}
+
+		public void AktualizovatZ(Transakce noveHodnoty)
+		{
+			this.Datum = noveHodnoty.Datum;
+			this.Vynosy = noveHodnoty.Vynosy;
+			this.Naklady = noveHodnoty.Naklady;
+			this.Popis = noveHodnoty.Popis;
+		}
 		#endregion
 
 	}
