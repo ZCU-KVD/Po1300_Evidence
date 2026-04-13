@@ -48,5 +48,34 @@ namespace Evidence.Services
 				TransakceSeznam.Add(transakce);
 			}
 		}
+
+		public List<Transakce> Filtrovat(string filtrText, Models.OperatorZisku filtrZiskOperator, decimal? filtrZiskHodnota) 
+		{
+			//var pom = TransakceSeznam.Where(t => t.Zisk == 0);
+			var vysledek = TransakceSeznam.AsEnumerable();
+			if (!string.IsNullOrWhiteSpace(filtrText))
+			{ 
+				vysledek = vysledek.Where(t => t.Popis.Contains(filtrText, StringComparison.OrdinalIgnoreCase));
+			}
+
+			if (filtrZiskHodnota.HasValue)
+			{
+				vysledek = filtrZiskOperator switch
+				{
+					Models.OperatorZisku.Rovno => vysledek.Where(t => t.Zisk == filtrZiskHodnota.Value),
+					Models.OperatorZisku.Mensi => vysledek.Where(t => t.Zisk < filtrZiskHodnota.Value),
+					Models.OperatorZisku.Vetsi => vysledek.Where(t => t.Zisk > filtrZiskHodnota.Value),
+					_ => vysledek
+				};
+			}
+
+			return vysledek.ToList();
+		}
+
+		public void NahraditSeznamTransakci(List<Transakce> nactenySeznamTransakci)
+		{
+			TransakceSeznam.Clear();
+			TransakceSeznam.AddRange(nactenySeznamTransakci);
+		}
 	}
 }

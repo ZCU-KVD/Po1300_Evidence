@@ -3,7 +3,13 @@
 <PageTitle>Evidence</PageTitle>
 
 <h3>Evidence nákladů a výnosů</h3>
-
+<div class="container mt-3">
+    <div class="d-flex justify-content-end  mb-3">
+        <button type="button" @onclick="UlozitData" class="btn mx-1 btn-outline-primary">Uložit</button>
+        <button type="button" @onclick="NactiData" class="btn  btn-outline-primary">Načíst</button>
+        <button type="button" @onclick="SmazatData" class="btn mx-1 btn-outline-danger">Smazat vše</button>
+    </div>
+</div>
 <div>
     @* formulář *@
     <div class="card">
@@ -58,21 +64,21 @@
                         search
                     </span>
                 </span>
-                <input type="text" class="form-control" placeholder="Hledat v popisu">
+                <input type="text" @bind="FiltrText" @bind:event="oninput" class="form-control" placeholder="Hledat v popisu">
             </div>
         </div>
 
        
         <div class="col-md-2 ">
-            <select class="form-select">
-                <option>Zisk rovno (=)</option>
-                <option>Zisk menší něž (&lt;)</option>
-                <option>Zisk větší něž (&gt;)</option>
+            <select class="form-select" @bind="FiltrZiskOperator" @bind:event="oninput">
+                <option value="@Models.OperatorZisku.Rovno">Zisk rovno (=)</option>
+                <option value="@Models.OperatorZisku.Mensi">Zisk menší něž (&lt;)</option>
+                <option value="@Models.OperatorZisku.Vetsi">Zisk větší něž (&gt;)</option>
             </select>
         </div>
       
         <div class="col-md-2 ">
-            <input type="number" class="form-control" placeholder="Hodnota...">
+            <input type="number" @bind="FiltrZiskHodnota" @bind:event="oninput" class="form-control" placeholder="Hodnota zisku">
         </div>
 
         <div class="col-md-1 ">
@@ -93,7 +99,7 @@
             </tr>
         </thead>
         <tbody>
-            @foreach (var item in EvidenceService.TransakceSeznam)
+            @foreach (var item in FiltrovanySeznamTransakci)
             {
                 var tridaZisku = item.Zisk > 0 ? "text-success" : "text-danger";
                 <tr>
